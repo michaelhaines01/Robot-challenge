@@ -1,24 +1,14 @@
-const createtable = () => {
-  let table = [...Array(5)].map((x) => Array(5).fill(0));
-  for (let y = 0; y < table.length; y++) {
-    for (let x = 0; x < 5; x++) {
-      table[y][x] = { x: x, y: table.length - 1 - y, occupied: false };
+const table = () => {
+  const createtable = () => {
+    let table = [...Array(5)].map((x) => Array(5).fill(0));
+    for (let y = 0; y < table.length; y++) {
+      for (let x = 0; x < 5; x++) {
+        table[y][x] = { x: x, y: table.length - 1 - y, occupied: false };
+      }
     }
-  }
-  return table;
-};
-let table = createtable();
-
-const Robot = (x, y, direction) => {
-  let location = [x, y];
-  let compass = [
-    { name: "north", active: true },
-    { name: "east", active: false },
-    { name: "south", active: false },
-    { name: "west:", active: false },
-  ];
-
-  const place = () => {
+    return table;
+  };
+  const placetable = () => {
     for (let i = 0; i < table.length; i++) {
       for (let k = 0; k < table.length; k++) {
         if (table[i][k].x == x && table[i][k].y == y) {
@@ -27,7 +17,6 @@ const Robot = (x, y, direction) => {
       }
     }
   };
-
   const changeboard = () => {
     for (let i = 0; i < table.length; i++) {
       for (let k = 0; k < table.length; k++) {
@@ -46,6 +35,19 @@ const Robot = (x, y, direction) => {
       }
     }
   };
+  return { createtable, placetable, changeboard, updateboard };
+};
+
+let table = createtable();
+
+const Robot = (x, y, direction) => {
+  let location = [x, y];
+  let compass = [
+    { name: "north", active: true },
+    { name: "east", active: false },
+    { name: "south", active: false },
+    { name: "west:", active: false },
+  ];
 
   const report = () => {
     let direction = compass.find((o) => o.active === true);
@@ -65,33 +67,33 @@ const Robot = (x, y, direction) => {
   const move = () => {
     //switch case
     if (compass[0].active == true && isvalid([location[0], location[1] + 1])) {
-      updateboard();
+      table.updateboard();
       location[1] = location[1] + 1;
-      changeboard();
+      table.changeboard();
     } else if (
       compass[1].active == true &&
       isvalid([location[0] + 1, location[1]])
     ) {
-      updateboard();
+      table.updateboard();
       location[0] = location[0] + 1;
-      changeboard();
+      table.changeboard();
     } else if (
       compass[2].active === true &&
       isvalid([location[0], location[1] - 1])
     ) {
-      updateboard();
+      table.updateboard();
       location[1] = location[1] - 1;
-      changeboard();
+      table.changeboard();
     } else if (
       compass[3].active === true &&
       isvalid([location[0] - 1, location[1]])
     ) {
-      updateboard();
+      table.updateboard();
       location[0] = location[0] - 1;
-      changeboard();
+      table.changeboard();
     }
   };
-
+  //turn left
   const left = () => {
     compass.find((o, i) => {
       //this is sloppy
