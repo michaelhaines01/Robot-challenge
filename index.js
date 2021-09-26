@@ -1,4 +1,4 @@
-const table = () => {
+const tablemodule = () => {
   const createtable = () => {
     let table = [...Array(5)].map((x) => Array(5).fill(0));
     for (let y = 0; y < table.length; y++) {
@@ -8,7 +8,8 @@ const table = () => {
     }
     return table;
   };
-  const placetable = () => {
+
+  const placetable = (table) => {
     for (let i = 0; i < table.length; i++) {
       for (let k = 0; k < table.length; k++) {
         if (table[i][k].x == x && table[i][k].y == y) {
@@ -17,7 +18,7 @@ const table = () => {
       }
     }
   };
-  const changeboard = () => {
+  const changeboard = (table) => {
     for (let i = 0; i < table.length; i++) {
       for (let k = 0; k < table.length; k++) {
         if (table[i][k].x == location[0] && table[i][k].y == location[1]) {
@@ -26,7 +27,7 @@ const table = () => {
       }
     }
   };
-  const updateboard = () => {
+  const updateboard = (table) => {
     for (let i = 0; i < table.length; i++) {
       for (let k = 0; k < table.length; k++) {
         if (table[i][k].x == location[0] && table[i][k].y == location[1]) {
@@ -35,12 +36,11 @@ const table = () => {
       }
     }
   };
+
   return { createtable, placetable, changeboard, updateboard };
 };
 
-let table = createtable();
-
-const Robot = (x, y, direction) => {
+const Robot = (x, y, table) => {
   let location = [x, y];
   let compass = [
     { name: "north", active: true },
@@ -133,18 +133,16 @@ const Robot = (x, y, direction) => {
   //change to false
   //move -1 change true
 
-  return { place, move, report, left, right };
+  return { move, report, left, right };
 };
 
 //report
 //direction left and right
 //move
+tablemodule();
+let table = tablemodule().createtable();
 const robot1 = Robot(1, 2);
 
-robot1.place();
-robot1.right();
 robot1.move();
-robot1.move();
-robot1.left();
-robot1.move();
+
 robot1.report();
