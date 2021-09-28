@@ -18,6 +18,7 @@ const robotchallenge = (() => {
       }
       return table;
     };
+
     const isoccupied = (location) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
@@ -31,6 +32,7 @@ const robotchallenge = (() => {
         }
       }
     };
+
     const isvalid = (location) => {
       if (location[0] === 5 || location[0] === -1) {
         return false;
@@ -41,6 +43,7 @@ const robotchallenge = (() => {
       }
       return true;
     };
+
     const updatetable = (location, id, direction) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
@@ -53,6 +56,7 @@ const robotchallenge = (() => {
         }
       }
     };
+
     const resettable = (location) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
@@ -65,6 +69,7 @@ const robotchallenge = (() => {
         }
       }
     };
+
     const findrobot = (id) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
@@ -94,6 +99,7 @@ const robotchallenge = (() => {
       { name: "SOUTH", active: false },
       { name: "WEST", active: false },
     ];
+
     const setdirection = (robotdirection) => {
       compass.forEach((o, i) => {
         if (o.name === robotdirection) {
@@ -113,6 +119,7 @@ const robotchallenge = (() => {
         return `${location[0]},${location[1]},${facing.name}`;
       }
     };
+
     const move = () => {
       if (
         compass[0].active == true &&
@@ -144,6 +151,7 @@ const robotchallenge = (() => {
         tablemodule.updatetable(location, id, compass[3].name);
       }
     };
+
     const turnleft = () => {
       compass.find((o, i) => {
         if (o.active == true) {
@@ -163,6 +171,7 @@ const robotchallenge = (() => {
       tablemodule.updatetable(location, id, robotdirection);
       return compass;
     };
+
     const turnright = () => {
       compass.find((o, i) => {
         if (o.active == true) {
@@ -184,6 +193,7 @@ const robotchallenge = (() => {
     };
     return { move, report, turnleft, turnright };
   };
+
   const controller = (command) => {
     if (command.includes("PLACE")) {
       let Position = command.slice(6);
@@ -226,7 +236,9 @@ const robotchallenge = (() => {
       robot.move();
     }
   };
+
   let table = tablemodule.createtable();
   return { controller };
 })();
+
 exports.commandline = robotchallenge;

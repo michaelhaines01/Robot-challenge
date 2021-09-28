@@ -23,14 +23,14 @@ describe("robotchallenge", () => {
     robotchallenge.commandline.controller("MOVE");
     expect(robotchallenge.commandline.controller("REPORT")).toBe("3,3,NORTH");
   });
+  test("Try to place robot without declaring PLACE", () => {
+    const robotchallenge = require("./index");
+    expect(robotchallenge.commandline.controller("1,2,EAST")).toBeFalsy;
+  });
   test("Try to place robot in occupied spot", () => {
     const robotchallenge = require("./index");
     robotchallenge.commandline.controller("PLACE 1,2,EAST");
     expect(robotchallenge.commandline.controller("PLACE 1,2,EAST")).toBeFalsy;
-  });
-  test("Try to place robot off the table", () => {
-    const robotchallenge = require("./index");
-    expect(robotchallenge.commandline.controller("PLACE 1,5,EAST")).toBeFalsy;
   });
   test("Try to move robot off the table", () => {
     const robotchallenge = require("./index");
@@ -52,14 +52,6 @@ describe("robotchallenge", () => {
       "0,0,SOUTH, 2 Robots present, Robot 1 active."
     );
   });
-  test("Place multiple robots and the first robot to remain active", () => {
-    const robotchallenge = require("./index");
-    robotchallenge.commandline.controller("PLACE 1,3,SOUTH");
-    robotchallenge.commandline.controller("PLACE 0,3,SOUTH");
-    expect(robotchallenge.commandline.controller("REPORT")).toBe(
-      "1,3,SOUTH, 2 Robots present, Robot 1 active."
-    );
-  });
   test("Select robot and move active robot", () => {
     const robotchallenge = require("./index");
     robotchallenge.commandline.controller("PLACE 3,3,SOUTH");
@@ -70,6 +62,14 @@ describe("robotchallenge", () => {
     robotchallenge.commandline.controller("MOVE");
     expect(robotchallenge.commandline.controller("REPORT")).toBe(
       "1,3,EAST, 3 Robots present, Robot 2 active."
+    );
+  });
+  test("Place multiple robots and the first robot to remain active", () => {
+    const robotchallenge = require("./index");
+    robotchallenge.commandline.controller("PLACE 1,3,SOUTH");
+    robotchallenge.commandline.controller("PLACE 0,3,SOUTH");
+    expect(robotchallenge.commandline.controller("REPORT")).toBe(
+      "1,3,SOUTH, 2 Robots present, Robot 1 active."
     );
   });
 });
