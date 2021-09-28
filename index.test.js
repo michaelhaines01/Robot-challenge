@@ -38,12 +38,6 @@ describe("robotchallenge", () => {
     robotchallenge.commandline.controller("MOVE");
     expect(robotchallenge.commandline.controller("REPORT")).toBe("0,0,SOUTH");
   });
-  test("Try to move robot off the table", () => {
-    const robotchallenge = require("./index");
-    robotchallenge.commandline.controller("PLACE 0,0,SOUTH");
-    robotchallenge.commandline.controller("MOVE");
-    expect(robotchallenge.commandline.controller("REPORT")).toBe("0,0,SOUTH");
-  });
   test("Report to include how many are placed and which is active", () => {
     const robotchallenge = require("./index");
     robotchallenge.commandline.controller("PLACE 0,0,SOUTH");
@@ -71,5 +65,11 @@ describe("robotchallenge", () => {
     expect(robotchallenge.commandline.controller("REPORT")).toBe(
       "1,3,SOUTH, 2 Robots present, Robot 1 active."
     );
+  });
+  test("Place multiple robots and make them run into each other", () => {
+    const robotchallenge = require("./index");
+    robotchallenge.commandline.controller("PLACE 0,0,NORTH");
+    robotchallenge.commandline.controller("PLACE 1,0,SOUTH");
+    expect(robotchallenge.commandline.controller("MOVE")).toBeFalsy;
   });
 });
