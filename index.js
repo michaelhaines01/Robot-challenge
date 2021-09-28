@@ -236,7 +236,6 @@ const robotchallenge = (() => {
       robot.move();
     }
   };
-
   let table = tablemodule.createtable();
   return { controller };
 })();
