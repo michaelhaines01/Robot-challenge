@@ -9,8 +9,6 @@
   "author": "Michael Haines",
   "license": "ISC",
   "dependencies": {
-
-"jest": "^27.2.2"
-}
-
+    "jest": "^27.2.2"
+  }
 }

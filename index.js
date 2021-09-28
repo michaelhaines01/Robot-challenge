@@ -206,7 +206,7 @@ const robotchallenge = (() => {
           id,
           position[2]
         );
-        let activerobot = tablemodule.findrobot(1);
+        const activerobot = tablemodule.findrobot(1);
         robot = Robot(
           activerobot.id,
           activerobot.x,
