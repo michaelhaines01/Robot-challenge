@@ -1,0 +1,16 @@
+{
+  "name": "robot-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Michael Haines",
+  "license": "ISC",
+  "dependencies": {
+
+"jest": "^27.2.2"
+}
+
+}

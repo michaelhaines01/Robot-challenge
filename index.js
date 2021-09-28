@@ -18,7 +18,7 @@ const robotchallenge = (() => {
       }
       return table;
     };
-    const isoccupied = (table, location) => {
+    const isoccupied = (location) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
           if (
@@ -31,18 +31,17 @@ const robotchallenge = (() => {
         }
       }
     };
-    const isvalid = (table, location) => {
+    const isvalid = (location) => {
       if (location[0] === 5 || location[0] === -1) {
         return false;
       } else if (location[1] === -1 || location[1] === 5) {
         return false;
-      } else if (isoccupied(table, location)) {
+      } else if (isoccupied(location)) {
         return false;
       }
       return true;
     };
-    const updatetable = (table, location, id, direction) => {
-      console.log(direction);
+    const updatetable = (location, id, direction) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
           if (table[i][k].x == location[0] && table[i][k].y == location[1]) {
@@ -54,7 +53,7 @@ const robotchallenge = (() => {
         }
       }
     };
-    const resettable = (table, location) => {
+    const resettable = (location) => {
       for (let i = 0; i < table.length; i++) {
         for (let k = 0; k < table.length; k++) {
           if (table[i][k].x == location[0] && table[i][k].y == location[1]) {
@@ -95,7 +94,6 @@ const robotchallenge = (() => {
       { name: "SOUTH", active: false },
       { name: "WEST", active: false },
     ];
-    console.log(direction);
     const setdirection = (robotdirection) => {
       compass.forEach((o, i) => {
         if (o.name === robotdirection) {
@@ -109,41 +107,44 @@ const robotchallenge = (() => {
 
     const report = () => {
       let facing = compass.find((o) => o.active === true);
-      return `${location[0]},${location[1]},${facing.name} ${counter} Robots on table`;
+      if (counter > 1) {
+        return `${location[0]},${location[1]},${facing.name}, ${counter} Robots present, Robot ${id} active.`;
+      } else {
+        return `${location[0]},${location[1]},${facing.name}`;
+      }
     };
     const move = () => {
       if (
         compass[0].active == true &&
-        tablemodule().isvalid(table, [location[0], location[1] + 1])
+        tablemodule.isvalid([location[0], location[1] + 1])
       ) {
-        tablemodule.resettable(table, location);
+        tablemodule.resettable(location);
         location[1] = location[1] + 1;
-        console.log(location);
-        tablemodule.updatetable(table, location, id, compass[0].name);
+        tablemodule.updatetable(location, id, compass[0].name);
       } else if (
         compass[1].active == true &&
         tablemodule.isvalid(table, [location[0] + 1, location[1]])
       ) {
-        tablemodule.resettable(table, location);
+        tablemodule.resettable(location);
         location[0] = location[0] + 1;
-        tablemodule.updatetable(table, location, id, compass[1].name);
+        tablemodule.updatetable(location, id, compass[1].name);
       } else if (
         compass[2].active === true &&
-        tablemodule.isvalid(table, [location[0], location[1] - 1])
+        tablemodule.isvalid([location[0], location[1] - 1])
       ) {
-        tablemodule.resettable(table, location);
+        tablemodule.resettable(location);
         location[1] = location[1] - 1;
         tablemodule.updatetable(table, location, id, compass[2].name);
       } else if (
         compass[3].active === true &&
-        tablemodule.isvalid(table, [location[0] - 1, location[1]])
+        tablemodule.isvalid([location[0] - 1, location[1]])
       ) {
-        tablemodule.resettable(table, location);
+        tablemodule.resettable(location);
         location[0] = location[0] - 1;
-        tablemodule.updatetable(table, location, id, compass[3].name);
+        tablemodule.updatetable(location, id, compass[3].name);
       }
     };
-    const left = () => {
+    const turnleft = () => {
       compass.find((o, i) => {
         if (o.active == true) {
           if (i == 0) {
@@ -153,52 +154,48 @@ const robotchallenge = (() => {
             return true;
           } else {
             compass[i].active = false;
-            robotdirection = compass[i - 1].active = true;
+            compass[i - 1].active = true;
             robotdirection = compass[i - 1].name;
             return true;
           }
         }
       });
-      tablemodule.updatetable(table, location, id, robotdirection);
+      tablemodule.updatetable(location, id, robotdirection);
       return compass;
     };
-    const right = () => {
+    const turnright = () => {
       compass.find((o, i) => {
         if (o.active == true) {
           if (i == 3) {
             compass[i].active = false;
             compass[0].active = true;
+            robotdirection = compass[0].name;
             return true;
           } else {
             compass[i].active = false;
             compass[i + 1].active = true;
+            robotdirection = compass[i + 1].name;
             return true;
           }
         }
       });
+      tablemodule.updatetable(location, id, robotdirection);
       return compass;
     };
-    return { move, report, left, right };
+    return { move, report, turnleft, turnright };
   };
-
-  const controller = () => {
-    let command = document.getElementById("command").value;
+  const controller = (command) => {
     if (command.includes("PLACE")) {
-      let positon = command.slice(6);
-      let position = positon.split(",");
-      //Check is valid
-      if (
-        tablemodule.isvalid(table, [Number(position[0]), Number(position[1])])
-      ) {
+      let Position = command.slice(6);
+      let position = Position.split(",");
+      if (tablemodule.isvalid([Number(position[0]), Number(position[1])])) {
         counter = counter + 1;
         id = id + 1;
         tablemodule.updatetable(
-          table,
           [Number(position[0]), Number(position[1])],
           id,
           position[2]
         );
-        //Default robot
         let activerobot = tablemodule.findrobot(1);
         robot = Robot(
           activerobot.id,
@@ -207,12 +204,11 @@ const robotchallenge = (() => {
           activerobot.direction
         );
       } else {
-        console.log(false);
+        return false;
       }
     } else if (command.includes("ROBOT")) {
       getrobotid = command.split(" ");
       activerobot = tablemodule.findrobot(getrobotid[1]);
-      console.log(activerobot);
       robot = Robot(
         activerobot.id,
         activerobot.x,
@@ -220,18 +216,17 @@ const robotchallenge = (() => {
         activerobot.direction
       );
     } else if (command === "LEFT") {
-      robot.left();
+      robot.turnleft();
     } else if (command === "REPORT") {
-      document.getElementById("output").innerHTML = robot.report();
+      let output = robot.report();
+      return output;
     } else if (command === "RIGHT") {
-      robot.right();
+      robot.turnright();
     } else if (command === "MOVE") {
       robot.move();
     }
-    console.log(table);
   };
   let table = tablemodule.createtable();
   return { controller };
 })();
-
-//PLACE 0,2,NORTH
+exports.commandline = robotchallenge;
