@@ -91,7 +91,6 @@ const robotchallenge = (() => {
   })();
 
   const Robot = (id, x, y, direction) => {
-    let robotdirection = direction;
     let location = [x, y];
     let compass = [
       { name: "NORTH", active: true },
@@ -100,16 +99,16 @@ const robotchallenge = (() => {
       { name: "WEST", active: false },
     ];
 
-    const setdirection = (robotdirection) => {
+    const setdirection = (direction) => {
       compass.forEach((o, i) => {
-        if (o.name === robotdirection) {
+        if (o.name === direction) {
           compass[i].active = true;
-        } else if (o.name !== robotdirection && o.active === true) {
+        } else if (o.name !== direction && o.active === true) {
           compass[i].active = false;
         }
       });
     };
-    setdirection(robotdirection);
+    setdirection(direction);
 
     const report = () => {
       let facing = compass.find((o) => o.active === true);
